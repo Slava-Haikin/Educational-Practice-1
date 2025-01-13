@@ -35,26 +35,26 @@
         <form action="#">
           <div class="row align-items-center mb-3">
             <div class="col-auto">
-              <input class="form-control" id="amount" name="amount" type="number" value="100"/>
+              <input class="form-control" id="amountInput" name="amount" type="number" value="100"/>
             </div>
             <div class="col-auto">
-              <select class="form-select" aria-label="Source currency">
-                <option value="rub" selected>Rub</option>
-                <option value="usd">Usd</option>
+              <select class="form-select" aria-label="Source currency" id="sourceCurrency">
+                <!-- <option value="rub" selected>Rub</option>
+                <option value="usd">Usd</option> -->
               </select>
             </div>
             <div class="col-auto">
               <span>in</span>
             </div>
             <div class="col-auto">
-              <select class="form-select" aria-label="Source currency">
-                <option value="rub">Rub</option>
-                <option value="usd" selected>Usd</option>
+              <select class="form-select" aria-label="Target currency" id="targetCurrency">
+                <!-- <option value="rub">Rub</option>
+                <option value="usd" selected>Usd</option> -->
               </select>
             </div>
           </div>
           <div class="row center">
-            <h4>Equals to =>  <span id="result"></span></h4>
+            <h4>Equals to =>  <span id="resultValue"></span></h4>
           </div>
         </form>
       </section>

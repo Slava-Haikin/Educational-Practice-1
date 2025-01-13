@@ -26,7 +26,7 @@ const fetchRatesData = async (currencyCode) => {
 const fetchInitialData = async () => {
   let userCurrency = DEFAULT_CURRENCY
 
-  const userIp = await getUserIp()
+  const userIp = await fetchUserIp()
   const { status, currency } = await fetchUserCurrencyCode(userIp)
 
   if (status === SUCCESS_CODE_API) {
@@ -43,10 +43,54 @@ const fetchInitialData = async () => {
   return { userCurrency, rates }
 }
 
+const createInitialCurrenciesLists = (currencyNamesList, sourceCurrency, targetCurrency) => {
+  const sourceCurrencySelectElement = document.getElementById('sourceCurrency')
+  const targetCurrencySelectElement = document.getElementById('targetCurrency')
+
+  currencyNamesList.forEach((currencyName) => {
+    const sourceOption = document.createElement('option')
+    sourceOption.value = currencyName.toLowerCase()
+    sourceOption.textContent = currencyName
+
+    if (currencyName.toLowerCase() === sourceCurrency.toLowerCase()) {
+      sourceOption.setAttribute('selected', 'true')
+    }
+  
+    const targetOption = document.createElement('option')
+    targetOption.value = currencyName.toLowerCase()
+    targetOption.textContent = currencyName
+
+    if (currencyName.toLowerCase() === targetCurrency.toLowerCase()) {
+      targetOption.setAttribute('selected', 'true')
+    }
+  
+    sourceCurrencySelectElement.appendChild(sourceOption)
+    targetCurrencySelectElement.appendChild(targetOption)
+  });
+}
+
+const renderResult = (value, currency) => {
+  const resultValueTextElement = document.getElementById('resultValue')
+  const resultString = `${value} ${currency}`
+
+  resultValueTextElement.textContent = resultString
+}
+
 const app = async () => {
   const { userCurrency, rates } = await fetchInitialData()
+  const currencyNamesList = Object.keys(rates).map((name) => name[0].toUpperCase() + name.slice(1).toLowerCase())
+  const sourceCurrency = userCurrency
+  const targetCurrency = DEFAULT_CURRENCY
 
-  console.log(userCurrency, rates)
+  const sourceCurrencySelectElement = document.getElementById('sourceCurrency')
+  const targetCurrencySelectElement = document.getElementById('targetCurrency')
+  const converterAmountInputElement = document.getElementById('amountInput')
+  const resultValueTextElement = document.getElementById('resultValue')
+
+  createInitialCurrenciesLists(currencyNamesList, sourceCurrency, targetCurrency)
+  renderResult(100, targetCurrency)
+
+  console.log(userCurrency, currencyNamesList)
   //TODO - APP STRUCTURE
   // 2. Add handlers
 }
