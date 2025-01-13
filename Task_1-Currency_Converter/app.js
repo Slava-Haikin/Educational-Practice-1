@@ -1,7 +1,7 @@
 const SUCCESS_CODE_API = 'success'
 const DEFAULT_CURRENCY = 'USD'
 
-const getUserIp = () => {
+const fetchUserIp = async () => {
   return fetch('https://api.ipify.org?format=json')
     .then((response) => response.json())
     .then(({ ip }) => ip)
@@ -37,7 +37,7 @@ const fetchInitialData = async () => {
 
   if (result !== SUCCESS_CODE_API) {
     alert('Something went wrong, please check your internet connection and reload the page.')
-    return
+    throw new Error('Unable to fetch rates data')
   }
 
   return { userCurrency, rates }
