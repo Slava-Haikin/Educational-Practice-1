@@ -40,11 +40,11 @@ const fetchInitialData = async () => {
     return
   }
 
-  return {userCurrency, rates}
+  return { userCurrency, rates }
 }
 
 const app = async () => {
-  const { userCurrency, rates} = await fetchInitialData();
+  const { userCurrency, rates } = await fetchInitialData()
 
   console.log(userCurrency, rates)
   //TODO - APP STRUCTURE
