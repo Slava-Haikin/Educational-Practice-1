@@ -2,6 +2,8 @@ const SUCCESS_CODE_API = 'success'
 const DEFAULT_CURRENCY = 'USD'
 const DEFAULT_AMOUNT = 100
 
+const capitalize = str => str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+
 const fetchUserIp = async () => {
   return fetch('https://api.ipify.org?format=json')
     .then((response) => response.json())
@@ -72,7 +74,7 @@ const renderInitialCurrenciesLists = (currencyNamesList, sourceCurrency, targetC
 
 const renderResult = (value, currency) => {
   const resultValueTextElement = document.getElementById('resultValue')
-  const resultString = `${value} ${currency}`
+  const resultString = `${value} ${capitalize(currency)}`
 
   resultValueTextElement.textContent = resultString
 }
@@ -81,15 +83,17 @@ const renderRatesTable = (converter) => {
   const createTableElement = (text = '') => {
     const newElement = document.createElement('span')
     newElement.classList.add('col-4')
+    newElement.classList.add('text-center')
     newElement.textContent = text
 
     return newElement
   }
   const ratesTableContainerElement = document.getElementById('ratesTable')
+  ratesTableContainerElement.replaceChildren()
   
-  const startingText = `${converter.amount} ${converter.sourceCurrency} = `
+  const startingText = `${converter.amount} ${capitalize(converter.sourceCurrency)} = `
   const result = converter.calculateExchangeTable()
-  const resultElements = result.map(([rate, targetCurrency]) => createTableElement(`${startingText}${rate} ${targetCurrency}`))
+  const resultElements = result.map(([rate, targetCurrency]) => createTableElement(`${startingText}${rate} ${capitalize(targetCurrency)}`))
   
   resultElements.forEach((el) => {
     ratesTableContainerElement.appendChild(el)
@@ -160,6 +164,7 @@ const app = async () => {
     converter.rates = rates
 
     renderResult(converter.calculateExchangeResult(), converter.targetCurrency)
+    renderRatesTable(converter)
   })
 
   targetCurrencySelectElement.addEventListener('input', (e) => {
