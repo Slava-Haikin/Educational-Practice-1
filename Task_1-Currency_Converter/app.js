@@ -1,5 +1,6 @@
 const SUCCESS_CODE_API = 'success'
 const DEFAULT_CURRENCY = 'USD'
+const DEFAULT_AMOUNT = 100
 
 const fetchUserIp = async () => {
   return fetch('https://api.ipify.org?format=json')
@@ -76,30 +77,53 @@ const renderResult = (value, currency) => {
   resultValueTextElement.textContent = resultString
 }
 
-const calculateExchageValue = (sum, targetCurrencyCode, rates) => sum * rates[targetCurrencyCode]
+const calculateExchageValue = (sum, targetCurrencyCode, rates) => (sum * rates[targetCurrencyCode]).toFixed(3)
 
-const renderInitialValues = () => {};
+const initializeApp = async () => {
+  const converter = {
+    rates: null,
+    amount: DEFAULT_AMOUNT,
+    sourceCurrency: DEFAULT_CURRENCY,
+    targetCurrency: DEFAULT_CURRENCY,
+  }
 
-const app = async () => {
   const { userCurrency, rates } = await fetchInitialData()
+  
+  converter.sourceCurrency = userCurrency
+  converter.rates = rates
+
+  return converter
+}
+
+const renderInitialApp = (converter) => {
+  const { rates, amount, sourceCurrency, targetCurrency } = converter;
   const currencyNamesList = Object.keys(rates).map((name) => name[0].toUpperCase() + name.slice(1).toLowerCase())
-  const sourceCurrency = userCurrency
-  const targetCurrency = DEFAULT_CURRENCY
 
   createInitialCurrenciesLists(currencyNamesList, sourceCurrency, targetCurrency)
-  renderResult(calculateExchageValue(100000, targetCurrency, rates), targetCurrency)
+  renderResult(calculateExchageValue(amount, targetCurrency, rates), targetCurrency)
+}
+
+const app = async () => {
+  const converter = await initializeApp()
+  renderInitialApp(converter)
 
   const sourceCurrencySelectElement = document.getElementById('sourceCurrency')
   const targetCurrencySelectElement = document.getElementById('targetCurrency')
   const amountInputElement = document.getElementById('amountInput')
-  const resultValueTextElement = document.getElementById('resultValue')
 
-  //TODO - APP STRUCTURE
-  // 2. Add handlers
+  amountInputElement.addEventListener('input', (e) => {
+    const currentValue = e.target.value
+    const calculatedExchangeResult = calculateExchageValue(currentValue, converter.targetCurrency, converter.rates)
 
-  amountInputElement.addEventListener('change', (e) => {
-    const currentValue = e.target.value;
-    console.log(currentValue);
+    converter.amount = Number(currentValue)
+    renderResult(calculatedExchangeResult, converter.targetCurrency)
+  })
+
+  sourceCurrencySelectElement.addEventListener('input', (e) => {
+    sourceCurrency = e.target.value
+    const exchangeResult = calculateExchageValue(exchangeAmount, targetCurrency, rates)
+    console.log('Its working', exchangeResult, targetCurrency)
+    renderResult(exchangeResult, targetCurrency)
   })
 }
 
