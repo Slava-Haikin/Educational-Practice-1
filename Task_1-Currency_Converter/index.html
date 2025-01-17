@@ -5,76 +5,64 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <title>Currency converter</title>
-  <style>
-    .card-body {
-      display: none;
-    }
-  
-    .card-body--active {
-      display: block;
-    }
-  </style>
 </head>
 <body>
   <div class="p-5">
     <h1 class="my-5">Currency converter</h1>
 
     <ul class="nav nav-pills my-3" id="tabs" role="tablist">
-      <li class="nav-item">
-        <a class="nav-link active" aria-current="page" href="#converter">Converter</a>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" type="button" id="converter-tab" data-bs-toggle="tab" data-bs-target="#converter-tab-pane" role="tab" aria-controls="converter-tab-pane" aria-selected="true">Converter</button>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#rates">Currency rates</a>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="rates-tab" data-bs-toggle="tab" data-bs-target="#rates-tab-pane" type="button" role="tab" aria-controls="rates-tab-pane" aria-selected="false">Currency rates</button>
       </li>
     </ul>
 
-    <main class="card shadow tab-content" id="tabsContent">
+    <main class="card shadow">
       <!-- Converter -->
-      <section class="card-body p-4 card-body--active">
-        <h2 class="mb-4">Currency to currency converter</h2>
-        <form action="#">
-          <div class="row align-items-center mb-3">
-            <div class="col-auto">
-              <input class="form-control" id="amountInput" name="amount" type="number" value="100"/>
+      <section class="card-body p-4 tab-content" id="tabsContent">
+        <div class="tab-pane fade show active" id="converter-tab-pane" role="tabpanel" aria-labelledby="converter-tab" tabindex="0">
+          <h2 class="mb-4">Currency to currency converter</h2>
+          <form action="#">
+            <div class="row align-items-center mb-3">
+              <div class="col-auto">
+                <input class="form-control" id="amountInput" name="amount" type="number" value="100"/>
+              </div>
+              <div class="col-auto">
+                <select class="form-select" aria-label="Source currency" id="sourceCurrency">
+                </select>
+              </div>
+              <div class="col-auto">
+                <span>in</span>
+              </div>
+              <div class="col-auto">
+                <select class="form-select" aria-label="Target currency" id="targetCurrency">
+                </select>
+              </div>
             </div>
-            <div class="col-auto">
-              <select class="form-select" aria-label="Source currency" id="sourceCurrency">
-                <!-- <option value="rub" selected>Rub</option>
-                <option value="usd">Usd</option> -->
-              </select>
+            <div class="row center">
+              <h4>Equals to =>  <span id="resultValue"></span></h4>
             </div>
-            <div class="col-auto">
-              <span>in</span>
-            </div>
-            <div class="col-auto">
-              <select class="form-select" aria-label="Target currency" id="targetCurrency">
-                <!-- <option value="rub">Rub</option>
-                <option value="usd" selected>Usd</option> -->
-              </select>
-            </div>
-          </div>
-          <div class="row center">
-            <h4>Equals to =>  <span id="resultValue"></span></h4>
-          </div>
-        </form>
-      </section>
+          </form>
+        </div>
 
-      <!-- Currency rates -->
-      <section class="card-body p-4">
-        <h2 class="mb-4">Currency rates</h2>
-
-        <div class="container">
-          <p class="row">
-            <span class="col-4">
-              1 Usd = 65 Rub
-            </span>
-            <span class="col-4">
-              1 Usd = 65 Rub
-            </span>
-            <span class="col-4">
-              1 Usd = 65 Rub
-            </span>
-          </p>
+        <!-- Currency rates -->
+        <div class="tab-pane fade" id="rates-tab-pane" role="tabpanel" aria-labelledby="rates-tab" tabindex="0">
+          <h2 class="mb-4">Currency rates</h2>
+          <div class="container">
+            <p class="row">
+              <span class="col-4">
+                1 Usd = 65 Rub
+              </span>
+              <span class="col-4">
+                1 Usd = 65 Rub
+              </span>
+              <span class="col-4">
+                1 Usd = 65 Rub
+              </span>
+            </p>
+          </div>
         </div>
       </section>
     </main>

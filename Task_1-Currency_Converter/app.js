@@ -44,7 +44,7 @@ const fetchInitialData = async () => {
   return { userCurrency, rates }
 }
 
-const createInitialCurrenciesLists = (currencyNamesList, sourceCurrency, targetCurrency) => {
+const renderInitialCurrenciesLists = (currencyNamesList, sourceCurrency, targetCurrency) => {
   const sourceCurrencySelectElement = document.getElementById('sourceCurrency')
   const targetCurrencySelectElement = document.getElementById('targetCurrency')
 
@@ -85,7 +85,7 @@ const initializeApp = async () => {
     amount: DEFAULT_AMOUNT,
     sourceCurrency: DEFAULT_CURRENCY,
     targetCurrency: DEFAULT_CURRENCY,
-    calculateExchangeResult: function() {
+    calculateExchangeResult() {
       return (this.amount * this.rates[this.targetCurrency.toUpperCase()]).toFixed(3)
     },
   }
@@ -102,7 +102,7 @@ const renderInitialApp = (converter) => {
   const { rates, sourceCurrency, targetCurrency } = converter;
   const currencyNamesList = Object.keys(rates).map((name) => name[0].toUpperCase() + name.slice(1).toLowerCase())
 
-  createInitialCurrenciesLists(currencyNamesList, sourceCurrency, targetCurrency)
+  renderInitialCurrenciesLists(currencyNamesList, sourceCurrency, targetCurrency)
   renderResult(converter.calculateExchangeResult(), targetCurrency)
 }
 
