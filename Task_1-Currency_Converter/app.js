@@ -17,7 +17,7 @@ const fetchUserCurrencyCode = async (ip) => {
 }
 
 const fetchRatesData = async (currencyCode) => {
-  const ratesQueryLink = `https://open.er-api.com/v6/latest/${currencyCode}`
+  const ratesQueryLink = `https://open.er-api.com/v6/latest/${currencyCode.toUpperCase()}`
 
   return fetch(ratesQueryLink)
     .then((response) => response.json())
@@ -85,6 +85,9 @@ const initializeApp = async () => {
     amount: DEFAULT_AMOUNT,
     sourceCurrency: DEFAULT_CURRENCY,
     targetCurrency: DEFAULT_CURRENCY,
+    calculateExchangeResult: function() {
+      return (this.amount * this.rates[this.targetCurrency.toUpperCase()]).toFixed(3)
+    },
   }
 
   const { userCurrency, rates } = await fetchInitialData()
@@ -96,34 +99,43 @@ const initializeApp = async () => {
 }
 
 const renderInitialApp = (converter) => {
-  const { rates, amount, sourceCurrency, targetCurrency } = converter;
+  const { rates, sourceCurrency, targetCurrency } = converter;
   const currencyNamesList = Object.keys(rates).map((name) => name[0].toUpperCase() + name.slice(1).toLowerCase())
 
   createInitialCurrenciesLists(currencyNamesList, sourceCurrency, targetCurrency)
-  renderResult(calculateExchageValue(amount, targetCurrency, rates), targetCurrency)
+  renderResult(converter.calculateExchangeResult(), targetCurrency)
 }
 
 const app = async () => {
   const converter = await initializeApp()
   renderInitialApp(converter)
 
+  const amountInputElement = document.getElementById('amountInput')
   const sourceCurrencySelectElement = document.getElementById('sourceCurrency')
   const targetCurrencySelectElement = document.getElementById('targetCurrency')
-  const amountInputElement = document.getElementById('amountInput')
 
   amountInputElement.addEventListener('input', (e) => {
     const currentValue = e.target.value
-    const calculatedExchangeResult = calculateExchageValue(currentValue, converter.targetCurrency, converter.rates)
-
     converter.amount = Number(currentValue)
-    renderResult(calculatedExchangeResult, converter.targetCurrency)
+
+    renderResult(converter.calculateExchangeResult(), converter.targetCurrency)
   })
 
-  sourceCurrencySelectElement.addEventListener('input', (e) => {
+  sourceCurrencySelectElement.addEventListener('input', async (e) => {
     sourceCurrency = e.target.value
-    const exchangeResult = calculateExchageValue(exchangeAmount, targetCurrency, rates)
-    console.log('Its working', exchangeResult, targetCurrency)
-    renderResult(exchangeResult, targetCurrency)
+    converter.sourceCurrency = sourceCurrency
+
+    const { rates } = await fetchRatesData(sourceCurrency)
+    converter.rates = rates
+
+    renderResult(converter.calculateExchangeResult(), converter.targetCurrency)
+  })
+
+  targetCurrencySelectElement.addEventListener('input', (e) => {
+    targetCurrency = e.target.value
+    converter.targetCurrency = targetCurrency
+
+    renderResult(converter.calculateExchangeResult(), converter.targetCurrency)
   })
 }
 
