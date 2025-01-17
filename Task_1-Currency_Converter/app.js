@@ -89,7 +89,7 @@ const renderRatesTable = (converter) => {
   
   const startingText = `${converter.amount} ${converter.sourceCurrency} = `
   const result = converter.calculateExchangeTable()
-  const resultElements = result.map((rate) => createTableElement(`${startingText}${rate} ${converter.targetCurrency}`))
+  const resultElements = result.map(([rate, targetCurrency]) => createTableElement(`${startingText}${rate} ${targetCurrency}`))
   
   resultElements.forEach((el) => {
     ratesTableContainerElement.appendChild(el)
@@ -112,8 +112,8 @@ const initializeApp = async () => {
       const tableRatesCodes = Object.keys(converter.rates).slice(1, 10)
 
       for (let i = 0; i < 9; i += 1) {
-        const result = this.amount * this.rates[tableRatesCodes[i].toUpperCase()].toFixed(3)
-        tableArray.push(result)
+        const result = (this.amount * this.rates[tableRatesCodes[i].toUpperCase()]).toFixed(3)
+        tableArray.push([result, tableRatesCodes[i]])
       }
 
       return tableArray
