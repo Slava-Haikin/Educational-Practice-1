@@ -76,23 +76,31 @@ const renderResult = (value, currency) => {
   resultValueTextElement.textContent = resultString
 }
 
+const calculateExchageValue = (sum, targetCurrencyCode, rates) => sum * rates[targetCurrencyCode]
+
+const renderInitialValues = () => {};
+
 const app = async () => {
   const { userCurrency, rates } = await fetchInitialData()
   const currencyNamesList = Object.keys(rates).map((name) => name[0].toUpperCase() + name.slice(1).toLowerCase())
   const sourceCurrency = userCurrency
   const targetCurrency = DEFAULT_CURRENCY
 
+  createInitialCurrenciesLists(currencyNamesList, sourceCurrency, targetCurrency)
+  renderResult(calculateExchageValue(100000, targetCurrency, rates), targetCurrency)
+
   const sourceCurrencySelectElement = document.getElementById('sourceCurrency')
   const targetCurrencySelectElement = document.getElementById('targetCurrency')
-  const converterAmountInputElement = document.getElementById('amountInput')
+  const amountInputElement = document.getElementById('amountInput')
   const resultValueTextElement = document.getElementById('resultValue')
 
-  createInitialCurrenciesLists(currencyNamesList, sourceCurrency, targetCurrency)
-  renderResult(100, targetCurrency)
-
-  console.log(userCurrency, currencyNamesList)
   //TODO - APP STRUCTURE
   // 2. Add handlers
+
+  amountInputElement.addEventListener('change', (e) => {
+    const currentValue = e.target.value;
+    console.log(currentValue);
+  })
 }
 
 app()
